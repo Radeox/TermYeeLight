@@ -7,14 +7,20 @@ class SmartBulb:
     mode = {
         "work": {
             "color_temp": 7000,
+            "brightness": 100,
         },
         "evening": {
             "color_temp": 1000,
+            "brightness": 33,
+        },
+        "default": {
+            "color_temp": 3000,
+            "brightness": 66,
         },
     }
 
-    def __init__(self):
-        self.bulb = Bulb(IP)
+    def __init__(self, ip_address):
+        self.bulb = Bulb(ip_address)
         self.status = self.bulb.get_properties()['power']
 
     def toggle_power(self):
@@ -34,8 +40,11 @@ class SmartBulb:
             print("Turning on.")
 
         try:
-            ct = self.mode[mode]['color_temp']
-            self.bulb.set_color_temp(ct)
+            color_temp = self.mode[mode]['color_temp']
+            brightness = self.mode[mode]['brightness']
+
+            self.bulb.set_color_temp(color_temp)
+            self.bulb.set_brightness(brightness)
             print(f"Setting mode '{mode}'.")
         except KeyError:
             print("Wrong mode!\nAvailable modes:")
@@ -44,7 +53,7 @@ class SmartBulb:
 
 
 if __name__ == "__main__":
-    bulb = SmartBulb()
+    bulb = SmartBulb(IP)
 
     if len(sys.argv) > 1:
         param = sys.argv[1]
