@@ -3,19 +3,20 @@ import time
 import yeelight
 from settings import IP
 
+
 class SmartBulb:
     mode = {
-        "work": {
-            "color_temp": 7000,
-            "brightness": 100,
+        "default": {
+            "color_temp": 3000,
+            "brightness": 66,
         },
         "evening": {
             "color_temp": 1000,
             "brightness": 33,
         },
-        "default": {
-            "color_temp": 3000,
-            "brightness": 66,
+        "work": {
+            "color_temp": 7000,
+            "brightness": 100,
         },
     }
 
@@ -23,33 +24,43 @@ class SmartBulb:
         self.bulb = yeelight.Bulb(ip_address)
         self.status = self.bulb.get_properties()['power']
 
-    def toggle_power(self):
-        if self.status == 'on':
+    def set_power(self, power):
+        if power == True:
+            self.status = 'on'
+            self.bulb.turn_on()
+            print("Turning on.")
+        else:
             self.status = 'off'
             self.bulb.turn_off()
             print("Turning off.")
+
+    def toggle_power(self):
+        if self.is_on:
+            self.set_power(False)
         else:
-            self.status = 'on'
-            self.bulb.turn_on()
-            print("Turning on.")
-    
+            self.set_power(True)
+
     def set_mode(self, mode):
-        if self.status == 'off':
-            self.status = 'on'
-            self.bulb.turn_on()
-            print("Turning on.")
-
-        try:
-            color_temp = self.mode[mode]['color_temp']
-            brightness = self.mode[mode]['brightness']
-
-            self.bulb.set_color_temp(color_temp)
-            self.bulb.set_brightness(brightness)
-            print(f"Setting mode '{mode}'.")
-        except KeyError:
+        if mode not in self.mode:
             print("Wrong mode!\nAvailable modes:")
             for mode in self.mode.keys():
                 print(f"- {mode}")
+        elif not self.is_off:
+            self.set_power(True)
+
+        color_temp = self.mode[mode]['color_temp']
+        brightness = self.mode[mode]['brightness']
+        self.bulb.set_color_temp(color_temp)
+        self.bulb.set_brightness(brightness)
+        print(f"Setting mode '{mode}'.")
+
+    @property
+    def is_on(self):
+        return True if self.status == 'on' else False
+
+    @property
+    def is_off(self):
+        return True if self.status == 'off' else False
 
 
 if __name__ == "__main__":
