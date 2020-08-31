@@ -25,7 +25,7 @@ class SmartBulb:
         self.status = self.bulb.get_properties()['power']
 
     def set_power(self, power):
-        if power == True:
+        if power:
             self.status = 'on'
             self.bulb.turn_on()
             print("Turning on.")
@@ -43,9 +43,9 @@ class SmartBulb:
     def set_mode(self, mode):
         if mode not in self.mode:
             print("Wrong mode!\nAvailable modes:")
-            for mode in self.mode.keys():
-                print(f"- {mode}")
-        elif not self.is_off:
+            for mode in self.mode.keys(): print(f"- {mode}")
+            return
+        elif self.is_off:
             self.set_power(True)
 
         color_temp = self.mode[mode]['color_temp']
