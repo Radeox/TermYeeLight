@@ -7,16 +7,20 @@ from settings import IP
 class SmartBulb:
     mode = {
         "default": {
-            "color_temp": 3000,
             "brightness": 66,
+            "color_temp": 3000,
         },
         "evening": {
-            "color_temp": 1000,
             "brightness": 33,
+            "RGB": (255, 125, 125),
         },
         "work": {
-            "color_temp": 7000,
             "brightness": 100,
+            "color_temp": 7000,
+        },
+        "gaming": {
+            "brightness": 20,
+            "RGB": (0, 0, 255),
         },
     }
 
@@ -48,10 +52,16 @@ class SmartBulb:
         elif self.is_off:
             self.set_power(True)
 
-        color_temp = self.mode[mode]['color_temp']
         brightness = self.mode[mode]['brightness']
-        self.bulb.set_color_temp(color_temp)
+        color_temp = self.mode[mode].get('color_temp')
+        rgb = self.mode[mode].get('RGB')
+
         self.bulb.set_brightness(brightness)
+        if rgb:
+            self.bulb.set_rgb(*rgb)
+        else:
+            self.bulb.set_color_temp(color_temp)
+
         print(f"Setting mode '{mode}'.")
 
     @property
