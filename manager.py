@@ -12,6 +12,10 @@ class SmartBulb:
         },
         "evening": {
             "brightness": 33,
+            "color_temp": 2000,
+        },
+        "red": {
+            "brightness": 33,
             "RGB": (255, 125, 125),
         },
         "work": {
