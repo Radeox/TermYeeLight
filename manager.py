@@ -1,6 +1,7 @@
 import sys
 import time
-import yeelight
+from yeelight import Bulb
+from yeelight.main import BulbException
 from settings import IP
 
 
@@ -29,7 +30,7 @@ class SmartBulb:
     }
 
     def __init__(self, ip_address):
-        self.bulb = yeelight.Bulb(ip_address)
+        self.bulb = Bulb(ip_address)
         self.status = self.bulb.get_properties()['power']
 
     def set_power(self, power):
@@ -80,8 +81,8 @@ class SmartBulb:
 if __name__ == "__main__":
     try:
         bulb = SmartBulb(IP)
-    except yeelight.main.BulbException:
-        print("Yeelight is unreachable!")
+    except BulbException as e:
+        print(f"Yee error: {e}")
     else:
         if len(sys.argv) > 1:
             param = sys.argv[1]
